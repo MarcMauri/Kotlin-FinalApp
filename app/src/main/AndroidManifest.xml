@@ -12,6 +12,9 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".activities.LoginActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.SignUpActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.ForgotPasswordActivity"></activity>
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>
