@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:fillViewport="true"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.SignUpActivity">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -87,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/login_button_xl_height"
             android:background="@drawable/button_ripple"
-            android:text="@string/login_create_account"
+            android:text="@string/login_go_login"
             android:textColor="@color/colorSecondaryText"
             android:textSize="@dimen/login_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
