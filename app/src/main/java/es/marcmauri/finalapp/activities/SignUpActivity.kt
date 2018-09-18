@@ -25,7 +25,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        button_signUp.setOnClickListener {
+        button_createAccount.setOnClickListener {
             val email = et_email.text.toString()
             val password = et_password.text.toString()
 
@@ -50,8 +50,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun isValidEmailAndPassword(email: String, password: String): Boolean {
-        return !email.isNullOrEmpty() &&
-                !password.isNullOrEmpty() &&
+        return !email.isEmpty() && !password.isEmpty() &&
                 password == et_confirmPassword.text.toString()
     }
 }

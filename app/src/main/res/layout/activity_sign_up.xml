@@ -62,13 +62,13 @@
             android:paddingEnd="@dimen/login_edit_text_space"
             android:paddingStart="@dimen/login_edit_text_space"
             android:textSize="@dimen/login_text_size"
-            app:layout_constraintBottom_toTopOf="@+id/button_signUp"
+            app:layout_constraintBottom_toTopOf="@+id/button_createAccount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button_signUp"
+            android:id="@+id/button_createAccount"
             android:layout_width="match_parent"
             android:layout_height="@dimen/login_button_xl_height"
             android:layout_marginBottom="64dp"

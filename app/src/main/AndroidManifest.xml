@@ -19,9 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.SignUpActivity"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.SignUpActivity" />
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:windowSoftInputMode="adjustPan" />
