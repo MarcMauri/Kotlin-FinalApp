@@ -27,12 +27,11 @@ class SignUpActivity : AppCompatActivity() {
         button_createAccount.setOnClickListener {
             val email = et_email.text.toString()
             val password = et_password.text.toString()
-
-            if (isValidEmailAndPassword(email, password)) {
+            val confirmPassword = et_confirmPassword.text.toString()
+            if (isValidEmail(email) && isValidPassword(password) && isValidConfirmPassword(password, confirmPassword))
                 signUpByEmail(email, password)
-            } else {
-                toast("Please fill all the data and confirm password is correct.")
-            }
+            else
+                toast("Please make sure all the data is correct.")
         }
 
         et_email.validate { email ->
@@ -40,7 +39,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         et_password.validate { pwd ->
-            et_password.error = if (isValidPassword(pwd)) null else "Passowrd should contain:\n1 lowercase\n1 uppercase\n1 number\n1 special character (@#\\$%^&+=!.)\n4 characters lenght at least"
+            et_password.error = if (isValidPassword(pwd)) null else "Password should contain:\n1 lowercase\n1 uppercase\n1 number\n1 special character (@#\\$%^&+=!.)\n4 characters lenght at least"
         }
 
         et_confirmPassword.validate { confirmPwd ->
