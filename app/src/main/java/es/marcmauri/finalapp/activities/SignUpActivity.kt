@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import es.marcmauri.finalapp.R
-import es.marcmauri.finalapp.others.goToActivity
-import es.marcmauri.finalapp.others.toast
+import es.marcmauri.finalapp.others.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 
@@ -36,6 +35,19 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+        et_email.validate { email ->
+            et_email.error = if (isValidEmail(email)) null else "Email is not valid"
+        }
+
+        et_password.validate { pwd ->
+            et_password.error = if (isValidPassword(pwd)) null else "Passowrd should contain:\n1 lowercase\n1 uppercase\n1 number\n1 special character (@#\\$%^&+=!.)\n4 characters lenght at least"
+        }
+
+        et_confirmPassword.validate { confirmPwd ->
+            et_confirmPassword.error = if (isValidConfirmPassword(et_password.text.toString(), confirmPwd)) null else "Confirm Password does not match with Password"
+        }
+
+
     }
 
     private fun signUpByEmail(email: String, password: String) {
@@ -56,6 +68,9 @@ class SignUpActivity : AppCompatActivity() {
         return !email.isEmpty() && !password.isEmpty() &&
                 password == et_confirmPassword.text.toString()
     }
+
+
+    //* EVENTS *//
 
     override fun onBackPressed() {
         super.onBackPressed()
