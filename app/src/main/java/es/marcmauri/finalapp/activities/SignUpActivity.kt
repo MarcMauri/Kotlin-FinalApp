@@ -52,7 +52,9 @@ class SignUpActivity : AppCompatActivity() {
     private fun signUpByEmail(email: String, password: String) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
-                toast("An email has been sent to you. Please, confirm before sign in")
+                mAuth.currentUser!!.sendEmailVerification().addOnCompleteListener(this) {
+                    toast("An email has been sent to you. Please, confirm before sign in")
+                }
                 goToActivity<LoginActivity> {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
@@ -61,11 +63,6 @@ class SignUpActivity : AppCompatActivity() {
                 toast("An unexpected error occurred, please try again.")
             }
         }
-    }
-
-    private fun isValidEmailAndPassword(email: String, password: String): Boolean {
-        return !email.isEmpty() && !password.isEmpty() &&
-                password == et_confirmPassword.text.toString()
     }
 
 
