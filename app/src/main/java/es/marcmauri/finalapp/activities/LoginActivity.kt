@@ -18,13 +18,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        if (mAuth.currentUser == null) {
-            toast("Nope")
-        } else {
-            toast("Yep")
-            mAuth.signOut()
-        }
-
         button_logIn.setOnClickListener {
             val email = et_email.text.toString()
             val password = et_password.text.toString()
@@ -36,8 +29,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        tv_forgotPassword.setOnClickListener { goToActivity<ForgotPasswordActivity>() }
-        button_createAccount.setOnClickListener { goToActivity<SignUpActivity>() }
+        tv_forgotPassword.setOnClickListener {
+            goToActivity<ForgotPasswordActivity>()
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+        }
+        button_createAccount.setOnClickListener {
+            goToActivity<SignUpActivity>()
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+        }
     }
 
     private fun logInByEmail(email: String, password: String) {
