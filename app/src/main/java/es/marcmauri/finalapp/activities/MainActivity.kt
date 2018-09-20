@@ -1,12 +1,18 @@
-package es.marcmauri.finalapp
+package es.marcmauri.finalapp.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth
+import es.marcmauri.finalapp.R
 
 class MainActivity : AppCompatActivity() {
+
+    private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mAuth.signOut()
     }
 }
