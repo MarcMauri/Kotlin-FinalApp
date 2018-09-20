@@ -49,8 +49,8 @@ class MainActivity : ToolbarActivity() {
                 } else {
                     prevBottomSelected!!.isChecked = false
                 }
-                bottomNavigation.menu.getItem(0).isChecked = true
-                prevBottomSelected = bottomNavigation.menu.getItem(0)
+                bottomNavigation.menu.getItem(position).isChecked = true
+                prevBottomSelected = bottomNavigation.menu.getItem(position)
             }
         })
     }
