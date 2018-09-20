@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import com.google.firebase.auth.FirebaseAuth
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.PagerAdapter
 import es.marcmauri.finalapp.fragments.ChatFragment
@@ -15,9 +14,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : ToolbarActivity() {
 
-    private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-
-    private lateinit var adapter: PagerAdapter
     private var prevBottomSelected: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +27,10 @@ class MainActivity : ToolbarActivity() {
     }
 
     private fun getPagerAdapter(): PagerAdapter {
-        adapter = PagerAdapter(supportFragmentManager)
-        adapter.addFragment(ChatFragment())
+        val adapter = PagerAdapter(supportFragmentManager)
         adapter.addFragment(InfoFragment())
         adapter.addFragment(RatesFragment())
+        adapter.addFragment(ChatFragment())
         return adapter
     }
 
