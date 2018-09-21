@@ -10,16 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.ChatAdapter
 import es.marcmauri.finalapp.models.Message
 import es.marcmauri.finalapp.utils.toast
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.util.*
+import java.util.EventListener
 import kotlin.collections.HashMap
 
 
@@ -35,6 +33,8 @@ class ChatFragment : Fragment() {
 
     private val store: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var chatBDRef: CollectionReference
+
+    private var chatSubscription: ListenerRegistration? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -97,20 +97,30 @@ class ChatFragment : Fragment() {
     }
 
     private fun subscribeToChatMessages() {
-        chatBDRef.addSnapshotListener(object : EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
-            override fun onEvent(snapshot: QuerySnapshot?, exception: FirebaseFirestoreException?) {
-                exception?.let {
-                    activity!!.toast("Exception!")
-                    return
-                }
+        chatSubscription = chatBDRef
+                .orderBy("sentAt", Query.Direction.DESCENDING)
+                .limit(100)
+                .addSnapshotListener(object : EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
+                    override fun onEvent(snapshot: QuerySnapshot?, exception: FirebaseFirestoreException?) {
+                        exception?.let {
+                            activity!!.toast("Exception!")
+                            return
+                        }
 
-                snapshot?.let {
-                    messageList.clear()
-                    val messages = it.toObjects(Message::class.java)
-                    messageList.addAll(messages)
-                    adapter.notifyDataSetChanged()
-                }
-            }
-        })
+                        snapshot?.let {
+                            messageList.clear()
+                            val messages = it.toObjects(Message::class.java)
+                            messageList.addAll(messages.asReversed())
+                            adapter.notifyDataSetChanged()
+                            _view.recyclerView.smoothScrollToPosition(messageList.size)
+                        }
+                    }
+                })
+    }
+
+
+    override fun onDestroy() {
+        chatSubscription?.remove()
+        super.onDestroy()
     }
 }
