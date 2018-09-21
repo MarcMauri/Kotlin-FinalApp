@@ -15,8 +15,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.ChatAdapter
 import es.marcmauri.finalapp.models.Message
+import es.marcmauri.finalapp.utils.toast
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class ChatFragment : Fragment() {
@@ -39,7 +41,7 @@ class ChatFragment : Fragment() {
         setUpChatDB()
         setUpCurrentUser()
         setUpRecyclerView()
-        setUpChatButton()
+        setUpChatBtn()
 
         return _view
     }
@@ -62,16 +64,31 @@ class ChatFragment : Fragment() {
         _view.recyclerView.adapter = adapter
     }
 
-    private fun setUpChatButton() {
+    private fun setUpChatBtn() {
         _view.button_send.setOnClickListener {
             val messageText = _view.et_message.text.toString()
             if (messageText.isNotEmpty()) {
                 val message = Message(currentUser.uid, messageText, currentUser.photoUrl.toString(), Date())
-                // Guardaremos el mensaje en Firebase
+                saveMessage(message)
                 _view.et_message.setText("")
             }
         }
     }
 
+    /* This function will save a message into Firebase */
+    private fun saveMessage(message: Message) {
+        val newMessage = HashMap<String, Any>()
+        newMessage["authorId"] = message.authorId
+        newMessage["message"] = message.message
+        newMessage["profileImageURL"] = message.profileImageURL
+        newMessage["sentAt"] = message.sentAt
 
+        chatBDRef.add(newMessage)
+                .addOnCompleteListener {
+                    activity!!.toast("Message added!")
+                }
+                .addOnFailureListener {
+                    activity!!.toast("Message error, try again!")
+                }
+    }
 }
