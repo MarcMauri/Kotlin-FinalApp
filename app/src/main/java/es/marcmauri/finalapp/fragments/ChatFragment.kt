@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.ChatAdapter
 import es.marcmauri.finalapp.models.Message
@@ -42,6 +44,8 @@ class ChatFragment : Fragment() {
         setUpCurrentUser()
         setUpRecyclerView()
         setUpChatBtn()
+
+        subscribeToChatMessages()
 
         return _view
     }
@@ -90,5 +94,23 @@ class ChatFragment : Fragment() {
                 .addOnFailureListener {
                     activity!!.toast("Message error, try again!")
                 }
+    }
+
+    private fun subscribeToChatMessages() {
+        chatBDRef.addSnapshotListener(object : EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
+            override fun onEvent(snapshot: QuerySnapshot?, exception: FirebaseFirestoreException?) {
+                exception?.let {
+                    activity!!.toast("Exception!")
+                    return
+                }
+
+                snapshot?.let {
+                    messageList.clear()
+                    val messages = it.toObjects(Message::class.java)
+                    messageList.addAll(messages)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        })
     }
 }
