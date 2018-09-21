@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import es.marcmauri.finalapp.R
-import es.marcmauri.finalapp.others.goToActivity
-import es.marcmauri.finalapp.others.isValidEmail
-import es.marcmauri.finalapp.others.toast
-import es.marcmauri.finalapp.others.validate
+import es.marcmauri.finalapp.utils.goToActivity
+import es.marcmauri.finalapp.utils.isValidEmail
+import es.marcmauri.finalapp.utils.toast
+import es.marcmauri.finalapp.utils.validate
 import kotlinx.android.synthetic.main.activity_forgot_password.*
 
 class ForgotPasswordActivity : AppCompatActivity() {

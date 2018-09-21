@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import es.marcmauri.finalapp.R
-import es.marcmauri.finalapp.others.*
+import es.marcmauri.finalapp.utils.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 

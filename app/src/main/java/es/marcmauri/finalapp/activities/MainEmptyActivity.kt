@@ -4,7 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
-import es.marcmauri.finalapp.others.goToActivity
+import es.marcmauri.finalapp.utils.goToActivity
 
 // Login And Main Activity Flow
 class MainEmptyActivity : AppCompatActivity() {

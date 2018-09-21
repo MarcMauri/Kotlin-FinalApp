@@ -11,7 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import es.marcmauri.finalapp.R
-import es.marcmauri.finalapp.others.*
+import es.marcmauri.finalapp.utils.*
 import kotlinx.android.synthetic.main.activity_login.*
 
 

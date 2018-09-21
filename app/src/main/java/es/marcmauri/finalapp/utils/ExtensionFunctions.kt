@@ -1,4 +1,4 @@
-package es.marcmauri.finalapp.others
+package es.marcmauri.finalapp.utils
 
 import android.app.Activity
 import android.content.Intent
@@ -8,13 +8,19 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
+import com.squareup.picasso.Picasso
 import java.util.regex.Pattern
 
 
 fun Activity.toast(message: CharSequence, duration: Int = Toast.LENGTH_SHORT) = Toast.makeText(this, message, duration).show()
 
 fun Activity.toast(message: Int, duration: Int = Toast.LENGTH_SHORT) = Toast.makeText(this, message, duration).show()
+
+fun ImageView.loadByUrl(url: String) = Picasso.get().load(url).into(this)
+
+fun ImageView.loadByResource(resource: Int) = Picasso.get().load(resource).into(this)
 
 fun ViewGroup.inflate(layoutId: Int) = LayoutInflater.from(context).inflate(layoutId, this, false)!!
 
