@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
-
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.utils.CircleTransform
+import es.marcmauri.finalapp.utils.toast
 import kotlinx.android.synthetic.main.fragment_info.view.*
+import java.util.EventListener
 
 class InfoFragment : Fragment() {
 
@@ -37,6 +36,9 @@ class InfoFragment : Fragment() {
         setUpCurrentUser()
         setUpCurrentUserInfoUI()
 
+        // Total Messages Firebase style
+        subscribeToTotalMessagesFirebaseStyle()
+
         return _view
     }
 
@@ -51,10 +53,30 @@ class InfoFragment : Fragment() {
     private fun setUpCurrentUserInfoUI() {
         _view.tv_infoEmail.text = currentUser.email
         _view.tv_infoName.text = if (currentUser.displayName.isNullOrEmpty()) getString(R.string.info_no_name) else currentUser.displayName
-        currentUser.photoUrl?.let {
-            Picasso.get().load(currentUser.photoUrl).fit().centerCrop().transform(CircleTransform()).into(_view.iv_infoAvatar)
+        currentUser.photoUrl?.let { photo ->
+            Picasso.get().load(photo).fit().centerCrop().transform(CircleTransform()).into(_view.iv_infoAvatar)
         } ?: run {
             Picasso.get().load(R.drawable.ic_person).fit().centerCrop().transform(CircleTransform()).into(_view.iv_infoAvatar)
         }
+    }
+
+    private fun subscribeToTotalMessagesFirebaseStyle() {
+        chatSubscription = chatBDRef.addSnapshotListener(object : EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
+            override fun onEvent(querySnapshot: QuerySnapshot?, exception: FirebaseFirestoreException?) {
+                exception?.let {
+                    activity!!.toast("Exception!")
+                    return
+                }
+
+                querySnapshot?.let {
+                    _view.tv_infoTotalMessages.text = "${it.size()}"
+                }
+            }
+        })
+    }
+
+    override fun onDestroy() {
+        chatSubscription?.remove()
+        super.onDestroy()
     }
 }
