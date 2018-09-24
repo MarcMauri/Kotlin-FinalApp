@@ -72,7 +72,7 @@ class ChatFragment : Fragment() {
         _view.button_send.setOnClickListener {
             val messageText = _view.et_message.text.toString()
             if (messageText.isNotEmpty()) {
-                val photo = currentUser.photoUrl?.let { currentUser.photoUrl.toString() } ?: kotlin.run { "" }
+                val photo = currentUser.photoUrl?.let { currentUser.photoUrl.toString() } ?: run { "" }
                 val message = Message(currentUser.uid, messageText, photo, Date())
                 saveMessage(message)
                 _view.et_message.setText("")
