@@ -20,6 +20,7 @@ import es.marcmauri.finalapp.dialogs.RateDialog
 import es.marcmauri.finalapp.models.NewRateEvent
 import es.marcmauri.finalapp.models.Rate
 import es.marcmauri.finalapp.utils.RxBus
+import es.marcmauri.finalapp.utils.toast
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_rates.view.*
 
@@ -63,7 +64,7 @@ class RatesFragment : Fragment() {
         currentUser = mAuth.currentUser!!
     }
 
-    private fun setUpRecyclerView(){
+    private fun setUpRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         adapter = RatesAdapter(ratesList)
 
@@ -77,7 +78,21 @@ class RatesFragment : Fragment() {
         _view.fabRating.setOnClickListener { RateDialog().show(fragmentManager, "") }
     }
 
-    private fun saveRate(rate: Rate) {}
+    private fun saveRate(rate: Rate) {
+        val newRating = HashMap<String, Any>()
+        newRating["text"] = rate.text
+        newRating["rate"] = rate.rate
+        newRating["createdAt"] = rate.createdAt
+        newRating["profileImgURL"] = rate.profileImgURL
+
+        ratesDBRef.add(newRating)
+                .addOnCompleteListener {
+                    activity!!.toast("Rating added!")
+                }
+                .addOnFailureListener {
+                    activity!!.toast("Rating error, try again!")
+                }
+    }
 
     private fun subscribeToRatings() {}
 
