@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class RatesFragment : Fragment() {
 
     private lateinit var adapter: RatesAdapter
     private val ratesList: ArrayList<Rate> = ArrayList()
+    private lateinit var scrollListener: RecyclerView.OnScrollListener
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var currentUser: FirebaseUser
@@ -74,6 +76,23 @@ class RatesFragment : Fragment() {
         _view.recyclerView.layoutManager = layoutManager
         _view.recyclerView.itemAnimator = DefaultItemAnimator()
         _view.recyclerView.adapter = adapter
+
+        scrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (dy > 0 || dy < 0 && _view.fabRating.isShown)
+                    _view.fabRating.hide()
+
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    _view.fabRating.show()
+
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        }
+        _view.recyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun setUpFab() {
@@ -124,6 +143,7 @@ class RatesFragment : Fragment() {
 
 
     override fun onDestroyView() {
+        _view.recyclerView.removeOnScrollListener(scrollListener)
         ratesSubscription?.remove()
         rateBusListener.dispose()
         super.onDestroyView()
