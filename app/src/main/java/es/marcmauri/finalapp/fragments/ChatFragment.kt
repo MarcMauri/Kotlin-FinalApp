@@ -14,6 +14,8 @@ import com.google.firebase.firestore.*
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.ChatAdapter
 import es.marcmauri.finalapp.models.Message
+import es.marcmauri.finalapp.models.TotalMessagesEvent
+import es.marcmauri.finalapp.utils.RxBus
 import es.marcmauri.finalapp.utils.toast
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.util.*
@@ -114,11 +116,16 @@ class ChatFragment : Fragment() {
                             messageList.addAll(messages.asReversed())
                             adapter.notifyDataSetChanged()
                             _view.recyclerView.smoothScrollToPosition(messageList.size)
+
+                            // Esta linea mandara un evento al RxBus para que to-do el mundo disponga de los datos
+                            RxBus.publish(TotalMessagesEvent(messageList.size))
                         }
                     }
                 })
     }
 
+
+    /* Events */
 
     override fun onDestroyView() {
         chatSubscription?.remove()

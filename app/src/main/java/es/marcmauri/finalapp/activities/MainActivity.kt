@@ -36,6 +36,8 @@ class MainActivity : ToolbarActivity() {
 
     private fun setUpViewPager(adapter: PagerAdapter) {
         viewPager.adapter = adapter
+        // Esta linea es para que todos los fragments del adapter queden en memoria y no se destruyan sus vistas
+        viewPager.offscreenPageLimit = adapter.count
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}

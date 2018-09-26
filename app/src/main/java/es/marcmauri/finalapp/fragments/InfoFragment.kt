@@ -11,7 +11,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
 import es.marcmauri.finalapp.R
+import es.marcmauri.finalapp.models.TotalMessagesEvent
 import es.marcmauri.finalapp.utils.CircleTransform
+import es.marcmauri.finalapp.utils.RxBus
 import es.marcmauri.finalapp.utils.toast
 import kotlinx.android.synthetic.main.fragment_info.view.*
 import java.util.EventListener
@@ -37,7 +39,10 @@ class InfoFragment : Fragment() {
         setUpCurrentUserInfoUI()
 
         // Total Messages Firebase style
-        subscribeToTotalMessagesFirebaseStyle()
+        //subscribeToTotalMessagesFirebaseStyle()
+
+        // Total Messages Event Bus + Reactive Style
+        subscribeToTotalMessagesEventBusReactiveStyle()
 
         return _view
     }
@@ -73,6 +78,12 @@ class InfoFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun subscribeToTotalMessagesEventBusReactiveStyle() {
+        RxBus.listen(TotalMessagesEvent::class.java).subscribe {
+            _view.tv_infoTotalMessages.text = "${it.total}"
+        }
     }
 
 
