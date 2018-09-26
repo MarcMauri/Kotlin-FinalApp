@@ -1,14 +1,19 @@
 package es.marcmauri.finalapp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 import android.view.MenuItem
+import com.google.firebase.auth.FirebaseAuth
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.PagerAdapter
 import es.marcmauri.finalapp.fragments.ChatFragment
 import es.marcmauri.finalapp.fragments.InfoFragment
 import es.marcmauri.finalapp.fragments.RatesFragment
+import es.marcmauri.finalapp.utils.goToActivity
+import es.marcmauri.finalapp.utils.toast
 import es.marcmauri.mylibrary.ToolbarActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -68,5 +73,26 @@ class MainActivity : ToolbarActivity() {
                 else -> false
             }
         }
+    }
+
+
+    /* Events */
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_options_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_log_out -> {
+                FirebaseAuth.getInstance().signOut()
+                goToActivity<LoginActivity> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
