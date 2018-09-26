@@ -12,7 +12,7 @@ class RateDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        AlertDialog.Builder(context!!)
+        return AlertDialog.Builder(context!!)
                 .setTitle(R.string.dialog_title)
                 .setView(R.layout.dialog_rate)
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -21,7 +21,6 @@ class RateDialog : DialogFragment() {
                 .setNegativeButton(R.string.dialog_cancel) { dialog, which ->
                     activity!!.toast("Pressed Cancel")
                 }
-
-        return super.onCreateDialog(savedInstanceState)
+                .create()
     }
 }
