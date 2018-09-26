@@ -25,10 +25,10 @@ class RatesAdapter(private val items: List<Rate>) : RecyclerView.Adapter<RatesAd
 
             if(rate.profileImgURL.isEmpty()) {
                 Picasso.get().load(R.drawable.ic_person).resize(100, 100)
-                        .centerCrop().transform(CircleTransform()).into(iv_calendar)
+                        .centerCrop().transform(CircleTransform()).into(iv_profile)
             } else {
                 Picasso.get().load(rate.profileImgURL).resize(100, 100)
-                        .centerCrop().transform(CircleTransform()).into(iv_calendar)
+                        .centerCrop().transform(CircleTransform()).into(iv_profile)
             }
         }
     }
