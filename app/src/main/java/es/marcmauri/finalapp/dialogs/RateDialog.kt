@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment
 import android.app.Dialog
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.models.NewRateEvent
 import es.marcmauri.finalapp.models.Rate
@@ -16,8 +17,12 @@ import java.util.*
 
 class RateDialog : DialogFragment() {
 
+    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var currentUser: FirebaseUser
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
+        setUpCurrentUser()
         val view = activity!!.layoutInflater.inflate(R.layout.dialog_rate, null)
 
         return AlertDialog.Builder(context!!)
@@ -27,9 +32,9 @@ class RateDialog : DialogFragment() {
                     activity!!.toast("Pressed Ok")
                     val textRate = view.et_rateFeedback.text.toString()
                     if (textRate.isNotEmpty()) {
-                        val imgURL = FirebaseAuth.getInstance().currentUser!!.photoUrl?.toString()
+                        val imgURL = currentUser.photoUrl?.toString()
                                 ?: run { "" }
-                        val rate = Rate(textRate, view.ratingBarFeedback.rating, Date(), imgURL)
+                        val rate = Rate(currentUser.uid, textRate, view.ratingBarFeedback.rating, Date(), imgURL)
                         // Publicar el nuevo Rate en el Event Bus
                         RxBus.publish(NewRateEvent(rate))
                     }
@@ -38,5 +43,9 @@ class RateDialog : DialogFragment() {
                     activity!!.toast("Pressed Cancel")
                 }
                 .create()
+    }
+
+    private fun setUpCurrentUser() {
+        currentUser = mAuth.currentUser!!
     }
 }

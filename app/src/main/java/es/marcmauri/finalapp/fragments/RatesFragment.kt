@@ -99,8 +99,21 @@ class RatesFragment : Fragment() {
         _view.fabRating.setOnClickListener { RateDialog().show(fragmentManager, "") }
     }
 
+    private fun hasUserRated(rates: ArrayList<Rate>): Boolean {
+        rates.forEach { rate -> if (rate.userId == currentUser.uid) return true }
+        return false
+    }
+
+    private fun removeFabIfRated(rated: Boolean) {
+        if (rated) {
+            _view.fabRating.hide()
+            _view.recyclerView.removeOnScrollListener(scrollListener)
+        }
+    }
+
     private fun saveRate(rate: Rate) {
         val newRating = HashMap<String, Any>()
+        newRating["userId"] = rate.userId
         newRating["text"] = rate.text
         newRating["rate"] = rate.rate
         newRating["createdAt"] = rate.createdAt
@@ -128,6 +141,8 @@ class RatesFragment : Fragment() {
                         ratesList.clear()
                         val rates = it.toObjects(Rate::class.java)
                         ratesList.addAll(rates)
+
+                        removeFabIfRated(hasUserRated(ratesList))
 
                         adapter.notifyDataSetChanged()
                         _view.recyclerView.smoothScrollToPosition(0) // Scroll al principio
