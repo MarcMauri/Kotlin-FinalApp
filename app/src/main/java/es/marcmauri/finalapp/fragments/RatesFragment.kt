@@ -97,7 +97,7 @@ class RatesFragment : Fragment() {
     }
 
     private fun subscribeToRatings() {
-        ratesDBRef
+        ratesSubscription = ratesDBRef
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapShot, exception ->
                     exception?.let {
@@ -117,9 +117,16 @@ class RatesFragment : Fragment() {
     }
 
     private fun subscribeToNewRatings() {
-        RxBus.listen(NewRateEvent::class.java).subscribe { obj ->
+        rateBusListener = RxBus.listen(NewRateEvent::class.java).subscribe { obj ->
             saveRate(obj.rate)
         }
+    }
+
+
+    override fun onDestroyView() {
+        ratesSubscription?.remove()
+        rateBusListener.dispose()
+        super.onDestroyView()
     }
 
 }
