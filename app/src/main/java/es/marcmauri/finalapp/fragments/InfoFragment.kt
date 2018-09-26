@@ -15,6 +15,7 @@ import es.marcmauri.finalapp.models.TotalMessagesEvent
 import es.marcmauri.finalapp.utils.CircleTransform
 import es.marcmauri.finalapp.utils.RxBus
 import es.marcmauri.finalapp.utils.toast
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_info.view.*
 import java.util.EventListener
 
@@ -29,6 +30,7 @@ class InfoFragment : Fragment() {
     private lateinit var chatBDRef: CollectionReference
 
     private var chatSubscription: ListenerRegistration? = null
+    private lateinit var infoBusListener: Disposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -81,16 +83,16 @@ class InfoFragment : Fragment() {
     }
 
     private fun subscribeToTotalMessagesEventBusReactiveStyle() {
-        RxBus.listen(TotalMessagesEvent::class.java).subscribe {
+        infoBusListener = RxBus.listen(TotalMessagesEvent::class.java).subscribe {
             _view.tv_infoTotalMessages.text = "${it.total}"
         }
     }
 
 
-
     //** Events **//
 
     override fun onDestroyView() {
+        infoBusListener.dispose()
         chatSubscription?.remove()
         super.onDestroyView()
     }
