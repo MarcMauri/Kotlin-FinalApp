@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 
 import es.marcmauri.finalapp.R
 import es.marcmauri.finalapp.adapters.RatesAdapter
@@ -51,6 +52,7 @@ class RatesFragment : Fragment() {
         setUpRecyclerView()
         setUpFab()
 
+        subscribeToRatings()
         subscribeToNewRatings()
 
         return _view
@@ -94,7 +96,25 @@ class RatesFragment : Fragment() {
                 }
     }
 
-    private fun subscribeToRatings() {}
+    private fun subscribeToRatings() {
+        ratesDBRef
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener { snapShot, exception ->
+                    exception?.let {
+                        activity!!.toast("Exception!")
+                        return@addSnapshotListener
+                    }
+
+                    snapShot?.let {
+                        ratesList.clear()
+                        val rates = it.toObjects(Rate::class.java)
+                        ratesList.addAll(rates)
+
+                        adapter.notifyDataSetChanged()
+                        _view.recyclerView.smoothScrollToPosition(0) // Scroll al principio
+                    }
+                }
+    }
 
     private fun subscribeToNewRatings() {
         RxBus.listen(NewRateEvent::class.java).subscribe { obj ->
