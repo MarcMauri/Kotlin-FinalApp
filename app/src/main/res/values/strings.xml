@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">FinalApp</string>
 
+    <!-- Facebook login -->
+    <string name="facebook_app_id">250921655769838</string>
+    <string name="fb_login_protocol_scheme">fb250921655769838</string>
+
     <!-- Login View -->
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>

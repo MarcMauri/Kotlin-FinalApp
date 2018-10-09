@@ -15,4 +15,7 @@
 
     <color name="colorGooglePlus">#DD4B39</color>
     <color name="colorGooglePlusDark">#B92D21</color>
+
+    <color name="colorFacebookLogin">#4267b2</color>
+    <color name="colorFacebookLoginDark">#365899</color>
 </resources>

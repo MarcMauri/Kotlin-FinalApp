@@ -3,11 +3,18 @@ package es.marcmauri.finalapp.activities
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import es.marcmauri.finalapp.R
@@ -19,6 +26,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
     private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val mGoogleApiClient: GoogleApiClient by lazy { getGoogleApiClient() }
+    private val mFacebookCallbackManager: CallbackManager by lazy { CallbackManager.Factory.create() }
     private val RC_GOOGLE_SIGN_IN = 99
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +50,38 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
             startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
         }
 
+        button_logInFacebook.setReadPermissions("email", "public_profile")
+        button_logInFacebook.registerCallback(mFacebookCallbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                handleFacebookAccessToken(loginResult.accessToken)
+            }
+
+            override fun onCancel() {
+                // ...
+                toast("Facebook: Operacion cancelada")
+            }
+
+            override fun onError(error: FacebookException) {
+                // ...
+                toast("Facebok: Error!!")
+            }
+        })
+
+    }
+
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        mAuth.signInWithCredential(credential).addOnCompleteListener {
+            if (it.isSuccessful) {
+                goToActivity<MainActivity> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            } else {
+                toast("Facebook: Authentication failed")
+            }
+            LoginManager.getInstance().logOut()
+        }
     }
 
     private fun getGoogleApiClient(): GoogleApiClient {
@@ -114,7 +154,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                     logInByGoogleAccountIntoFirebase(account!!)
                 }
             }
-            else -> super.onActivityResult(requestCode, resultCode, data)
+            else -> {
+                super.onActivityResult(requestCode, resultCode, data)
+                mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data)
+            }
         }
     }
 
